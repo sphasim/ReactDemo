@@ -10,7 +10,7 @@ namespace ReactDemo.Controllers
     public class HomeController : Controller
     {
         private static readonly IList<CommentModel> _comments;
-   
+
         static HomeController()
         {
             _comments = new List<CommentModel>
@@ -37,7 +37,25 @@ namespace ReactDemo.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_comments);
+        }
+
+        [Route("comments")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true) ]
+        public IActionResult Comments()
+        {
+            return Json(_comments);
+        }
+
+        //Create new comment
+        [Route("comments/new")]
+        [HttpPost]
+        public ActionResult AddComment(CommentModel comment)
+        {
+            // Create a fake ID for this comment
+            comment.Id = _comments.Count + 1;
+            _comments.Add(comment);
+            return Content("Success :)");
         }
     }
 }
